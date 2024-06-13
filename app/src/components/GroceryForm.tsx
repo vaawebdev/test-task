@@ -1,29 +1,30 @@
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'
+import { CreateGroceryMutationPayload, useCreateGroceryMutation } from 'queries/grocery'
 import { FC } from 'react'
-import { useForm, Controller } from 'react-hook-form'
-import { TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
+import { Controller, useForm } from 'react-hook-form'
 
-import { useCreateGrocery } from 'hooks/useGrocery'
+export type GroceryFormProps = {
+  setOpenForm: (openForm: boolean) => void
+}
 
-const GroceryForm: FC<{ openForm: boolean; setOpenForm: (openForm: boolean) => void }> = ({
-  openForm,
-  setOpenForm,
-}) => {
-  const { handleSubmit, control, reset } = useForm<GroceryFormItem>()
-  const { mutateAsync: createGroceryItem } = useCreateGrocery()
+const GroceryForm: FC<GroceryFormProps> = ({ setOpenForm }) => {
+  const { handleSubmit, control } = useForm<CreateGroceryMutationPayload>()
+  const { mutateAsync: createGroceryItem } = useCreateGroceryMutation()
 
   const handleFormClose = () => {
     setOpenForm(false)
-    reset()
   }
 
-  const onSubmit = async (data: GroceryFormItem) => {
-    await createGroceryItem(data)
-    setOpenForm(false)
-    reset()
+  const onSubmit = (data: CreateGroceryMutationPayload) => {
+    createGroceryItem(data, {
+      onSuccess: () => {
+        setOpenForm(false)
+      },
+    })
   }
 
   return (
-    <Dialog open={openForm} onClose={handleFormClose}>
+    <Dialog open onClose={handleFormClose}>
       <DialogTitle>Add New Item</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>

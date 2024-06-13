@@ -21,13 +21,22 @@ export class GroceryService {
   }
 
   async createGrocery(createGroceryDto: CreateGroceryDto) {
-    return this.prisma.groceryItem.create({ data: createGroceryDto })
+    return await this.prisma.groceryItem.create({ data: createGroceryDto })
   }
 
   async updateGrocery(id: string, updateGroceryDto: UpdateGroceryDto) {
-    return this.prisma.groceryItem.update({
+    return await this.prisma.groceryItem.update({
       where: { id },
-      data: updateGroceryDto,
+      data: {
+        ...updateGroceryDto,
+        statusUpdatedAt: 'status' in updateGroceryDto ? new Date() : undefined,
+      },
+    })
+  }
+
+  async deleteGrocery(id: string) {
+    await this.prisma.groceryItem.delete({
+      where: { id },
     })
   }
 }

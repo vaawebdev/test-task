@@ -19,20 +19,21 @@ enum GroceryItemStatus {
 }
 
 model User {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email    String @unique
+  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email    String  @unique
   password String?
 
-  createdAt DateTime  @default(now()) @db.Timestamptz()
-  updatedAt DateTime  @updatedAt @db.Timestamptz()
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
 }
 
 model GroceryItem {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name     String
-  quantity Int?   @default(0)
-  priority Int?   @default(5)
-  status   GroceryItemStatus @default(RANOUT)
-  createdAt DateTime  @default(now()) @db.Timestamptz()
-  updatedAt DateTime  @updatedAt @db.Timestamptz()
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String
+  quantity        Int?              @default(0)
+  priority        Int?              @default(5)
+  status          GroceryItemStatus @default(RANOUT)
+  statusUpdatedAt DateTime?
+  createdAt       DateTime          @default(now()) @db.Timestamptz()
+  updatedAt       DateTime          @updatedAt @db.Timestamptz()
 }
